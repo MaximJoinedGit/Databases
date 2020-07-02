@@ -13,3 +13,4 @@ CREATE TABLE likes(
   posts_id SERIAL PRIMARY KEY COMMENT "Пост, который понравился",
   user_id SERIAL PRIMARY KEY COMMENT "Кому понравился",
 );
+ 
