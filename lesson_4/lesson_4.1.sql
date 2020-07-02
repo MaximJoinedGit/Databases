@@ -8,10 +8,10 @@ DESC users;
 
 SELECT * FROM users LIMIT 10;
 
--- Поменяем значение updated_at, если оно меньше created_at.
+-- РџРѕРјРµРЅСЏРµРј Р·РЅР°С‡РµРЅРёРµ updated_at, РµСЃР»Рё РѕРЅРѕ РјРµРЅСЊС€Рµ created_at.
 UPDATE media SET updated_at  = CURRENT_TIMESTAMP() WHERE created_at > updated_at;
 
--- Проверка. Не должно ничего отобразиться.
+-- РџСЂРѕРІРµСЂРєР°. РќРµ РґРѕР»Р¶РЅРѕ РЅРёС‡РµРіРѕ РѕС‚РѕР±СЂР°Р·РёС‚СЊСЃСЏ.
 SELECT * FROM users WHERE created_at > updated_at;
 
 /**********************************************************************************/
@@ -20,18 +20,18 @@ DESC profiles;
 
 SELECT * FROM profiles LIMIT 10;
 
--- Поменяем значение даты рождения, если пользователь слишком молодой.
+-- РџРѕРјРµРЅСЏРµРј Р·РЅР°С‡РµРЅРёРµ РґР°С‚С‹ СЂРѕР¶РґРµРЅРёСЏ, РµСЃР»Рё РїРѕР»СЊР·РѕРІР°С‚РµР»СЊ СЃР»РёС€РєРѕРј РјРѕР»РѕРґРѕР№.
 UPDATE profiles SET birthday = FROM_UNIXTIME(RAND() * (UNIX_TIMESTAMP('2014-12-31') - UNIX_TIMESTAMP('1970-01-01'))) 
 WHERE birthday > '2014-12-31';
 
--- Поменяем значение created_at, если создано менее пяти лет от даты рождения.
+-- РџРѕРјРµРЅСЏРµРј Р·РЅР°С‡РµРЅРёРµ created_at, РµСЃР»Рё СЃРѕР·РґР°РЅРѕ РјРµРЅРµРµ РїСЏС‚Рё Р»РµС‚ РѕС‚ РґР°С‚С‹ СЂРѕР¶РґРµРЅРёСЏ.
 UPDATE profiles SET created_at = DATE_ADD(birthday, INTERVAL 5 YEAR) WHERE birthday >= created_at;
 
--- Поменяем значение updated_at, если оно меньше created_at.
+-- РџРѕРјРµРЅСЏРµРј Р·РЅР°С‡РµРЅРёРµ updated_at, РµСЃР»Рё РѕРЅРѕ РјРµРЅСЊС€Рµ created_at.
 UPDATE media SET updated_at  = CURRENT_TIMESTAMP() WHERE created_at > updated_at;
 
--- Проверка. Не должно ничего отобразиться. 
--- Пользователь не позже 2015 г.р. включительно, страница должна быть создана после дня рождения, обновлена после создания.
+-- РџСЂРѕРІРµСЂРєР°. РќРµ РґРѕР»Р¶РЅРѕ РЅРёС‡РµРіРѕ РѕС‚РѕР±СЂР°Р·РёС‚СЊСЃСЏ. 
+-- РџРѕР»СЊР·РѕРІР°С‚РµР»СЊ РЅРµ РїРѕР·Р¶Рµ 2015 Рі.СЂ. РІРєР»СЋС‡РёС‚РµР»СЊРЅРѕ, СЃС‚СЂР°РЅРёС†Р° РґРѕР»Р¶РЅР° Р±С‹С‚СЊ СЃРѕР·РґР°РЅР° РїРѕСЃР»Рµ РґРЅСЏ СЂРѕР¶РґРµРЅРёСЏ, РѕР±РЅРѕРІР»РµРЅР° РїРѕСЃР»Рµ СЃРѕР·РґР°РЅРёСЏ.
 SELECT * FROM profiles WHERE birthday > '2014-12-31';
 SELECT * FROM profiles WHERE birthday >= created_at;
 SELECT * FROM profiles WHERE created_at > updated_at;
@@ -42,13 +42,13 @@ DESC messages;
 
 SELECT * FROM messages LIMIT 10;
 
--- Поменяем значения from_user_id на случайные в диапазоне от 1 до 300.
+-- РџРѕРјРµРЅСЏРµРј Р·РЅР°С‡РµРЅРёСЏ from_user_id РЅР° СЃР»СѓС‡Р°Р№РЅС‹Рµ РІ РґРёР°РїР°Р·РѕРЅРµ РѕС‚ 1 РґРѕ 300.
 UPDATE messages SET from_user_id = CEIL(RAND() * 300);
 
--- После замены только два сообщения были отправлены пользователем самому себе.
+-- РџРѕСЃР»Рµ Р·Р°РјРµРЅС‹ С‚РѕР»СЊРєРѕ РґРІР° СЃРѕРѕР±С‰РµРЅРёСЏ Р±С‹Р»Рё РѕС‚РїСЂР°РІР»РµРЅС‹ РїРѕР»СЊР·РѕРІР°С‚РµР»РµРј СЃР°РјРѕРјСѓ СЃРµР±Рµ.
 SELECT * FROM messages WHERE from_user_id = to_user_id;
 
--- Проверка не обязательна, поскольку после смены значений в столбце from_user_id сменилось значение в столбце updated_at на текущее время.
+-- РџСЂРѕРІРµСЂРєР° РЅРµ РѕР±СЏР·Р°С‚РµР»СЊРЅР°, РїРѕСЃРєРѕР»СЊРєСѓ РїРѕСЃР»Рµ СЃРјРµРЅС‹ Р·РЅР°С‡РµРЅРёР№ РІ СЃС‚РѕР»Р±С†Рµ from_user_id СЃРјРµРЅРёР»РѕСЃСЊ Р·РЅР°С‡РµРЅРёРµ РІ СЃС‚РѕР»Р±С†Рµ updated_at РЅР° С‚РµРєСѓС‰РµРµ РІСЂРµРјСЏ.
 
 /**********************************************************************************/
 -- media
@@ -58,7 +58,7 @@ SELECT * FROM media LIMIT 10;
 
 UPDATE media SET updated_at  = CURRENT_TIMESTAMP() WHERE created_at > updated_at;
 
--- Проверка. Не должно ничего отобразиться.
+-- РџСЂРѕРІРµСЂРєР°. РќРµ РґРѕР»Р¶РЅРѕ РЅРёС‡РµРіРѕ РѕС‚РѕР±СЂР°Р·РёС‚СЊСЃСЏ.
 SELECT * FROM media WHERE created_at > updated_at;
 
 CREATE TEMPORARY TABLE extensions (name VARCHAR(10));
@@ -86,7 +86,7 @@ SELECT * FROM media_types;
 
 UPDATE media_types SET updated_at = CURRENT_TIMESTAMP() WHERE created_at > updated_at;
 
--- Проверка. Не должно ничего отобразиться. 
+-- РџСЂРѕРІРµСЂРєР°. РќРµ РґРѕР»Р¶РЅРѕ РЅРёС‡РµРіРѕ РѕС‚РѕР±СЂР°Р·РёС‚СЊСЃСЏ. 
 SELECT * FROM profiles WHERE created_at > updated_at;
 
 /**********************************************************************************/
@@ -128,3 +128,4 @@ UPDATE communities SET updated_at = CURRENT_TIMESTAMP() WHERE created_at > updat
 DESC communities_users;
 
 SELECT * FROM communities_users LIMIT 10;
+
