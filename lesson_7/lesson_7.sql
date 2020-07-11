@@ -235,3 +235,14 @@ INSERT INTO cities VALUES
   ('kazan', 'Казань'),
   ('omsk', 'Омск');
 
+SELECT
+	c.name,
+	c1.name
+FROM
+	flights AS f
+JOIN cities AS c ON
+	f.`from` = c.label
+JOIN cities as c1 ON
+	f.`to` = c1.label
+ORDER BY
+	f.id;
