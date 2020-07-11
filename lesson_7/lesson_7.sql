@@ -236,13 +236,13 @@ INSERT INTO cities VALUES
   ('omsk', 'Омск');
 
 SELECT
-	c.name,
-	c1.name
+	c_dep.name AS depart,
+	c_arr.name AS arrive
 FROM
 	flights AS f
-JOIN cities AS c ON
-	f.`from` = c.label
-JOIN cities as c1 ON
-	f.`to` = c1.label
+JOIN cities AS c_dep ON
+	f.`from` = c_dep.label
+JOIN cities as c_arr ON
+	f.`to` = c_arr.label
 ORDER BY
 	f.id;
