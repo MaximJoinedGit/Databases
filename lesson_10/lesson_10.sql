@@ -52,6 +52,29 @@ LEFT JOIN communities_users cu ON c.id = cu.community_id
 LEFT JOIN profiles p ON cu.user_id = p.user_id
 LEFT JOIN users u ON u.id = p.user_id;
 
+-- Корректный вариант.
+
+SELECT DISTINCT 
+  communities.name AS group_name,
+  COUNT(communities_users.user_id) OVER() 
+    / (SELECT COUNT(*) FROM communities) AS avg_users_in_groups,
+  FIRST_VALUE(users.first_name) OVER birthday_desc AS youngest_first_name,
+  FIRST_VALUE(users.last_name) OVER birthday_desc AS youngest_last_name,
+  FIRST_VALUE(users.first_name) OVER birthday_asc AS oldest_first_name,
+  FIRST_VALUE(users.last_name) OVER birthday_asc AS oldest_last_name,
+  COUNT(communities_users.user_id) OVER(PARTITION BY communities.id) AS users_in_group,
+  (SELECT COUNT(*) FROM users) AS users_total,
+  COUNT(communities_users.user_id) OVER(PARTITION BY communities.id) 
+    / (SELECT COUNT(*) FROM users) *100 AS '%%'
+    FROM communities
+      LEFT JOIN communities_users 
+        ON communities_users.community_id = communities.id
+      LEFT JOIN users 
+        ON communities_users.user_id = users.id
+      LEFT JOIN profiles 
+        ON profiles.user_id = users.id
+      WINDOW birthday_desc AS (PARTITION BY communities.id ORDER BY profiles.birthday DESC),
+             birthday_asc AS (PARTITION BY communities.id ORDER BY profiles.birthday);  
 
 /* 3. (по желанию) Задание на денормализацию. Разобраться как построен и работает следующий запрос:
 Найти 10 пользователей, которые проявляют наименьшую активность в использовании социальной сети.
